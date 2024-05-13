@@ -1,9 +1,0 @@
-{
-  "name": "MongoDB",
-  "image": "mongo",
-  "extensions": ["ms-azuretools.vscode-docker"],
-  "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash"
-  },
-  "postCreateCommand": "apt-get update && apt-get install -y mongodb-clients"
-}
