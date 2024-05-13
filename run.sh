@@ -18,26 +18,19 @@ docker-compose build
 echo "Starting Docker containers in detached mode..."
 docker-compose up -d
 
-echo "Checking the key file inside the container..."
-docker-compose exec -T mongo1 ls -l /etc/mongo-keyfile
-docker-compose exec -T mongo1 cat /etc/mongo-keyfile
-
 # Wait for MongoDB to be fully up
 echo "Checking MongoDB readiness..."
-counter=0
-until docker-compose exec -T mongo1 mongosh -u toto -p toto --authenticationDatabase admin --eval "db.adminCommand('ping')"; do
-    >&2 echo "MongoDB is unavailable - sleeping"
-    sleep 2
-    counter=$((counter+1))
-    if [ $counter -eq 10 ]; then
-        >&2 echo "MongoDB took too long to start"
-        docker-compose logs
-        exit 1
-    fi
-done
+echo "Checking MongoDB readiness..."
+if docker-compose exec -T mongo1 mongosh -u toto -p toto --authenticationDatabase admin --eval "db.runCommand('ping')"; then
+    echo "MongoDB is up and responding to ping."
+else
+    echo "MongoDB is unavailable - check logs for details."
+    docker-compose logs mongo1
+    exit 1
+fi
 
->&2 echo "MongoDB is up - executing command"
-docker-compose exec -T mongo1 mongosh -u toto -p toto --authenticationDatabase admin
+# >&2 echo "MongoDB is up - executing command"
+docker-compose exec -T mongo1 mongosh -u toto -p toto 
 
 echo "MongoDB is running on port 27017."
 echo "List of running containers..."

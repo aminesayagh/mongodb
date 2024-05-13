@@ -17,4 +17,8 @@ docker network prune -f
 echo "Removing all unused Docker images..."
 docker image prune -a -f
 
+# Remove all unused volumes
+echo "Removing all unused Docker volumes..."
+docker volume prune -f
+
 echo "Docker cleanup complete."
