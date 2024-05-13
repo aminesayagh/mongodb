@@ -1,3 +1,4 @@
+
 services:
   mongo1:
     image: mongo:7.0 # Use the latest version of MongoDB
@@ -6,6 +7,7 @@ services:
       "--bind_ip_all", # Allow connections from all network interfaces, including the host machine, to the container
       "--port", "27017", # Set the port number
       '--auth', # Enable authentication
+      '--keyFile', '/data/keyfile', # Set the key file path
     ]
     environment:
       MONGO_INITDB_ROOT_USERNAME: toto # Set the root username
@@ -21,6 +23,7 @@ services:
       start_period: 0s # Start checking the health of the container immediately
       retries: 30 # Retry checking the health of the container 30 times
     volumes:
+      - "./mongodb-keyfile:/data/keyfile:ro" # Mount the key file to the container volume
       - "mongo1_data:/data/db" # Mount the data directory to the container volume 
       - "mongo1_config:/data/configdb" # Mount the config directory to the container volume
 volumes:

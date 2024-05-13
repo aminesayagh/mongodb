@@ -11,6 +11,9 @@ sudo tee /sys/kernel/mm/transparent_hugepage/defrag <<< 'never'
 echo "Setting vm.max_map_count..."
 sudo sysctl -w vm.max_map_count=262144
 
+# Ensure the key file has the correct permissions
+chmod 400 ./mongodb-keyfile
+
 echo "Building Docker images..."
 docker-compose build
 
@@ -18,8 +21,12 @@ docker-compose build
 echo "Starting Docker containers in detached mode..."
 docker-compose up -d
 
+# Check the status of the containers
+docker-compose exec mongo1 ls -l /data/keyfile
+
+
+
 # Wait for MongoDB to be fully up
-echo "Checking MongoDB readiness..."
 echo "Checking MongoDB readiness..."
 if docker-compose exec -T mongo1 mongosh -u toto -p toto --authenticationDatabase admin --eval "db.runCommand('ping')"; then
     echo "MongoDB is up and responding to ping."
@@ -30,7 +37,7 @@ else
 fi
 
 # >&2 echo "MongoDB is up - executing command"
-docker-compose exec -T mongo1 mongosh -u toto -p toto 
+docker-compose exec -T mongo1 mongosh -u toto -p toto
 
 echo "MongoDB is running on port 27017."
 echo "List of running containers..."
