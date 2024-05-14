@@ -1,0 +1,11 @@
+{
+    "name": "MongoDB Development Environment",
+    "service": "mongodb",
+    "workspaceFolder": "/workspace",
+    "extensions": [
+      "ms-azuretools.vscode-docker"
+    ],
+    "settings": {
+      "terminal.integrated.shell.linux": "/bin/bash"
+    }
+  }
